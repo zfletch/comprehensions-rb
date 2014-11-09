@@ -40,10 +40,10 @@ module ListComprehension
     private
 
     def get_variable_name(&variable_declaration)
-      ::Class.new do
+      ::Class.new(BasicObject) do
         define_method(:method_missing) { |name| name }
-        define_method(:name, &variable_declaration)
-      end.new.name
+        define_method(:name!, &variable_declaration)
+      end.new.name!
     end
 
     def evaluate!
@@ -54,7 +54,7 @@ module ListComprehension
       @results = []
 
       first.product(*rest).each do |variable_pairs|
-        result_class = ::Class.new do
+        result_class = ::Class.new(BasicObject) do
           variable_pairs.each do |name, value_block|
             define_method(name, -> { value_block })
           end
